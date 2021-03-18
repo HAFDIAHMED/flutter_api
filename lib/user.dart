@@ -3,10 +3,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class UserList extends StatelessWidget {
-  final String apiUrl = "https://randomuser.me/api/?results=10";
+  //final String apiUrl = Uri.https('https://randomuser.me/api/?results=10', 'api/?results=10');
 
   Future<List<dynamic>> fetchUsers() async {
-    var result = await http.get(apiUrl);
+    var result =
+        await http.get(Uri.https('https://randomuser.me', '/api/?results=10'));
     return json.decode(result.body)['results'];
   }
 
