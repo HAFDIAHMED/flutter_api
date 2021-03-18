@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class UserList extends StatelessWidget{
-
+class UserList extends StatelessWidget {
   final String apiUrl = "https://randomuser.me/api/?results=10";
 
   Future<List<dynamic>> fetchUsers() async {
-
     var result = await http.get(apiUrl);
     return json.decode(result.body)['results'];
-
   }
 
-  String _name(dynamic user){
-    return user['name']['title'] + " " + user['name']['first'] + " " +  user['name']['last'];
-
+  String _name(dynamic user) {
+    return user['name']['title'] +
+        " " +
+        user['name']['first'] +
+        " " +
+        user['name']['last'];
   }
 
-  String _location(dynamic user){
+  String _location(dynamic user) {
     return user['location']['country'];
   }
 
-  String _age(Map<dynamic, dynamic> user){
+  String _age(Map<dynamic, dynamic> user) {
     return "Age: " + user['dob']['age'].toString();
   }
 
@@ -36,37 +36,34 @@ class UserList extends StatelessWidget{
         child: FutureBuilder<List<dynamic>>(
           future: fetchUsers(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.hasData){
+            if (snapshot.hasData) {
               print(_age(snapshot.data[0]));
               return ListView.builder(
                   padding: EdgeInsets.all(8),
                   itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return
-                      Card(
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              leading: CircleAvatar(
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            leading: CircleAvatar(
                                 radius: 30,
-                                backgroundImage: NetworkImage(snapshot.data[index]['picture']['large'])),
-                              title: Text(_name(snapshot.data[index])),
-                              subtitle: Text(_location(snapshot.data[index])),
-                              trailing: Text(_age(snapshot.data[index])),
-                            )
-                          ],
-                        ),
-                      );
+                                backgroundImage: NetworkImage(
+                                    snapshot.data[index]['picture']['large'])),
+                            title: Text(_name(snapshot.data[index])),
+                            subtitle: Text(_location(snapshot.data[index])),
+                            trailing: Text(_age(snapshot.data[index])),
+                          )
+                        ],
+                      ),
+                    );
                   });
-            }else {
+            } else {
               return Center(child: CircularProgressIndicator());
             }
           },
-
-
         ),
       ),
     );
   }
-
 }
